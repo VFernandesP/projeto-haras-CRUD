@@ -1,0 +1,89 @@
+{% extends "cavalos/base.html" %}
+{% block title %}Lista de Cavalos{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h2"><i class="bi bi-grid-3x3-gap-fill"></i> Cavalos</h1>
+    <a href="{% url 'cavalos:criar_cavalo' %}" class="btn btn-success">
+        <i class="bi bi-plus-circle"></i> Novo Cavalo
+    </a>
+</div>
+
+<form method="get" class="row g-2 mb-4">
+    <div class="col-md-4">
+        <input type="text" name="q" class="form-control" placeholder="Buscar por nome ou raça..." value="{{ request.GET.q }}">
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i> Buscar</button>
+        {% if request.GET.q %}
+            <a href="{% url 'cavalos:lista_cavalos' %}" class="btn btn-secondary"><i class="bi bi-x-circle"></i> Limpar</a>
+        {% endif %}
+    </div>
+</form>
+
+<div class="table-responsive">
+    <table class="table table-hover table-striped align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>Foto</th>
+                <th>Nome</th>
+                <th>Raça</th>
+                <th>Sexo</th>
+                <th>Data Nasc.</th>   
+                <th>Valor</th>
+                <th>Ativo</th>
+                <th class="text-center">Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cavalo in cavalos %}
+            <tr>
+                <td>
+                    {% if cavalo.foto %}
+                        <img src="{{ cavalo.foto.url }}" alt="{{ cavalo.nome }}" width="60" height="60">
+                    {% else %}
+                        <img src="https://via.placeholder.com/60x60?text=Sem+imagem" alt="Sem foto">
+                    {% endif %}
+                </td>
+                <td><strong>{{ cavalo.nome }}</strong></td>
+                <td>{{ cavalo.raca }}</td>
+                <td>{{ cavalo.get_sexo_display }}</td>
+                <td>{{ cavalo.data_nascimento|date:"d/m/Y" }}</td>   <!-- ← Data formatada -->
+                <td>R$ {{ cavalo.valor|floatformat:2 }}</td>
+                <td>
+                    {% if cavalo.ativo %}
+                        <span class="badge bg-success"><i class="bi bi-check-circle"></i> Ativo</span>
+                    {% else %}
+                        <span class="badge bg-danger"><i class="bi bi-x-circle"></i> Inativo</span>
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    <a href="{% url 'cavalos:detalhe_cavalo' cavalo.pk %}" class="btn btn-sm btn-outline-info"><i class="bi bi-eye"></i></a>
+                    <a href="{% url 'cavalos:editar_cavalo' cavalo.pk %}" class="btn btn-sm btn-outline-warning"><i class="bi bi-pencil-square"></i></a>
+                    <a href="{% url 'cavalos:excluir_cavalo' cavalo.pk %}" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash3"></i></a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="8" class="text-center py-4 text-muted"><i class="bi bi-info-circle"></i> Nenhum cavalo cadastrado.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% if is_paginated %}
+<nav aria-label="Paginação">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page=1">&laquo; primeira</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">anterior</a></li>
+        {% endif %}
+        <li class="page-item disabled"><span class="page-link">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span></li>
+        {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">próxima</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">última &raquo;</a></li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+
+{% endblock %}
