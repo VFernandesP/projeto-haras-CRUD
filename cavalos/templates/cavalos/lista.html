@@ -36,7 +36,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for cavalo in cavalos %}
+            {% for cavalo in page_obj %}
             <tr>
                 <td>
                     {% if cavalo.foto %}
@@ -48,7 +48,7 @@
                 <td><strong>{{ cavalo.nome }}</strong></td>
                 <td>{{ cavalo.raca }}</td>
                 <td>{{ cavalo.get_sexo_display }}</td>
-                <td>{{ cavalo.data_nascimento|date:"d/m/Y" }}</td>   <!-- ← Data formatada -->
+                <td>{{ cavalo.data_nascimento|date:"d/m/Y" }}</td>   
                 <td>R$ {{ cavalo.valor|floatformat:2 }}</td>
                 <td>
                     {% if cavalo.ativo %}
@@ -70,17 +70,37 @@
     </table>
 </div>
 
-{% if is_paginated %}
+{% if page_obj.has_other_pages %}
 <nav aria-label="Paginação">
     <ul class="pagination justify-content-center">
         {% if page_obj.has_previous %}
-            <li class="page-item"><a class="page-link" href="?page=1">&laquo; primeira</a></li>
-            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">anterior</a></li>
+            <li class="page-item">
+                <a class="page-link" href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">
+                    &laquo; primeira
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">
+                    anterior
+                </a>
+            </li>
         {% endif %}
-        <li class="page-item disabled"><span class="page-link">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span></li>
+
+        <li class="page-item disabled">
+            <span class="page-link">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+        </li>
+
         {% if page_obj.has_next %}
-            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">próxima</a></li>
-            <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">última &raquo;</a></li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">
+                    Próxima
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">
+                    Última &raquo;
+                </a>
+            </li>
         {% endif %}
     </ul>
 </nav>

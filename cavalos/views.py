@@ -3,10 +3,20 @@ from .models import Cavalo
 from django.urls import reverse
 from .forms import CavaloForm
 from django.contrib import messages
+from django.core.paginator import Paginator
+from django.db.models import Q
 
 def lista_cavalos(request):
+    query = request.GET.get('q')
     cavalos = Cavalo.objects.all()
-    return render(request, 'cavalos/lista.html', {'cavalos': cavalos})
+    if query:
+        cavalos = cavalos.filter(
+            Q(nome__icontains=query) | Q(raca__icontains=query)
+        )
+    paginator = Paginator(cavalos, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'cavalos/lista.html', {'page_obj': page_obj})
 
 def detalhe_cavalo(request, pk):
     cavalo = get_object_or_404(Cavalo, pk=pk)

@@ -10,7 +10,6 @@
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
 
-            <!-- Exibe a prévia da foto se estiver editando e houver foto -->
             {% if cavalo and cavalo.foto %}
                 <div class="mb-3 text-center">
                     <label class="fw-bold">Foto atual:</label><br>
@@ -22,28 +21,43 @@
             {{ form.as_p }}
 
             <div class="d-flex justify-content-between mt-4">
-                <button type="submit" class="btn btn-success">
-                    <i class="bi bi-check2"></i> Salvar
-                </button>
-                <a href="{% url 'cavalos:lista_cavalos' %}" class="btn btn-secondary">
-                    <i class="bi bi-x-circle"></i> Cancelar
-                </a>
+                <button type="submit" class="btn btn-success"><i class="bi bi-check2"></i> Salvar</button>
+                <a href="{% url 'cavalos:lista_cavalos' %}" class="btn btn-secondary"><i class="bi bi-x-circle"></i> Cancelar</a>
             </div>
         </form>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    flatpickr("#data_nascimento", {
-        dateFormat: "d/m/Y",           // formato de exibição
-        altInput: true,
-        altFormat: "d/m/Y",            // formato alternativo
-        locale: "pt",                  // português
-        allowInput: true,              // permite digitar também
-        maxDate: "today",              // não permite datas futuras
-        yearSelectorType: "dropdown",  // facilita seleção de anos
-        monthSelectorType: "dropdown"
-    });
+    const input = document.querySelector('#data_nascimento');
+    if (input) {
+        // Máscara para inserir "/" automaticamente
+        input.addEventListener('input', function(e) {
+            let value = this.value.replace(/\D/g, '');
+            if (value.length > 2) {
+                value = value.substring(0, 2) + '/' + value.substring(2);
+            }
+            if (value.length > 5) {
+                value = value.substring(0, 5) + '/' + value.substring(5, 9);
+            }
+            this.value = value;
+        });
+
+        // Inicializa o Flatpickr (calendário)
+        flatpickr(input, {
+            dateFormat: "d/m/Y",
+            altInput: true,
+            altFormat: "d/m/Y",
+            locale: "pt",
+            allowInput: true,
+            maxDate: "today",
+            yearSelectorType: "dropdown",
+            monthSelectorType: "dropdown"
+        });
+    }
 });
 </script>
 {% endblock %}

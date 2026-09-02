@@ -4,8 +4,8 @@ from .models import Cavalo
 
 class CavaloForm(forms.ModelForm):
     data_nascimento = forms.DateField(
-        widget=forms.DateInput(attrs={'type': 'text', 'placeholder': 'dd/mm/aaaa', 'class': 'form-control'}),
-        input_formats=['%d/%m/%Y', '%d%m/%y'],
+        widget=forms.DateInput(attrs={'type': 'text', 'id': 'data_nascimento', 'placeholder': 'dd/mm/aaaa', 'class': 'form-control'}),
+        input_formats=['%d/%m/%Y', '%d/%m/%y'],
         label='Data de Nascimento'
     )
 
