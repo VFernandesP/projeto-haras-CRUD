@@ -1,0 +1,87 @@
+{% extends 'cavalos/base.html' %}
+
+{% block title %}Dashboard - Haras do Vale{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1>Dashboard</h1>
+            <p class="text-muted">Visão geral do Haras do Vale</p>
+        </div>
+
+        <a href="{% url 'cavalos:lista_cavalos' %}"
+           class="btn btn-primary">
+            Ver cavalos
+        </a>
+    </div>
+
+    <div class="row g-4">
+
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Cavalos</h5>
+                    <h2>{{ total_cavalos }}</h2>
+                    <p class="text-muted mb-0">
+                        Total cadastrado
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Cavalos ativos</h5>
+                    <h2>{{ cavalos_ativos }}</h2>
+                    <p class="text-muted mb-0">
+                        Atualmente ativos
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Proprietários</h5>
+                    <h2>{{ total_proprietarios }}</h2>
+                    <p class="text-muted mb-0">
+                        Cadastrados
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Veterinários</h5>
+                    <h2>{{ total_veterinarios }}</h2>
+                    <p class="text-muted mb-0">
+                        Cadastrados
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Atendimentos</h5>
+                    <h2>{{ total_atendimentos }}</h2>
+                    <p class="text-muted mb-0">
+                        Eventos registrados
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

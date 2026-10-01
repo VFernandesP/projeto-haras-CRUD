@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Cavalo
+from .models import Cavalo, Proprietario, Veterinario, Atendimento
 from django.urls import reverse
 from .forms import CavaloForm
 from django.contrib import messages
@@ -55,3 +55,12 @@ def excluir_cavalo(request, pk):
         return redirect(reverse('cavalos:lista_cavalos'))
     return render(request, 'cavalos/confirmar_exclusao.html', {'cavalo': cavalo})
 
+def dashboard(request):
+   contexto = {
+       'total_cavalos': Cavalo.objects.count(),
+       'cavalos_ativos': Cavalo.objects.filter(ativo=True).count(),
+       'total_proprietarios': Proprietario.objects.count(),
+       'total_veterinarios': Veterinario.objects.count(),
+       'total_atendimentos': Atendimento.objects.count(),
+   }
+   return render(request, 'cavalos/dashboard.html', contexto)
