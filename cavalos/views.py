@@ -5,6 +5,8 @@ from .forms import CavaloForm
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
+
 
 def lista_cavalos(request):
     query = request.GET.get('q')
@@ -18,10 +20,14 @@ def lista_cavalos(request):
     page_obj = paginator.get_page(page_number)
     return render(request, 'cavalos/lista.html', {'page_obj': page_obj})
 
+
+@login_required
 def detalhe_cavalo(request, pk):
     cavalo = get_object_or_404(Cavalo, pk=pk)
     return render(request, 'cavalos/detalhe.html', {'cavalo': cavalo})
 
+
+@login_required
 def criar_cavalo(request):
     if request.method == 'POST':
         form = CavaloForm(request.POST, request.FILES)
@@ -32,6 +38,8 @@ def criar_cavalo(request):
         form = CavaloForm()
     return render(request, 'cavalos/form.html', {'form': form, 'acao': 'Criar'})
 
+
+@login_required
 def editar_cavalo(request, pk):
     cavalo = get_object_or_404(Cavalo, pk=pk)
     if request.method == 'POST':
@@ -48,6 +56,8 @@ def editar_cavalo(request, pk):
         'cavalo': cavalo,  
     })
 
+
+@login_required
 def excluir_cavalo(request, pk):
     cavalo = get_object_or_404(Cavalo, pk=pk)
     if request.method == 'POST':
